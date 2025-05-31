@@ -27,5 +27,10 @@ namespace SPA_Test1.ViewModels
         /// Количество элементов
         /// </summary>
         int PageSize { get; }
+
+        /// <summary>
+        /// Отображаемые
+        /// </summary>
+        IEnumerable<string> DisplayNames { get; }
     }
 }

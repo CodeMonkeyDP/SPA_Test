@@ -1,77 +1,78 @@
-﻿@using SPA_Test1.Models
-@using SPA_Test1.Models.Helpers
-@model SPA_Test1.ViewModels.UsersViewModel
+﻿@model SPA_Test1.ViewModels.UsersViewModel
 
 @{
-    ViewBag.Title = "Страница пользователей";
+	ViewBag.Title = "Страница пользователей";
 }
 
-@using (Html.BeginForm("Index", "Home", FormMethod.Get))
-{
-    <div class="container mt-5">
-	    <h2>Пользователей (@Model.TotalCount всего)</h2>
-        
-        <!--Переход по страницам-->
-	    <div class="d-flex justify-content-between align-items-center mb-3">
-	        <div class="btn-group">
-		        @if (Model.PageNumber > 1)
-		        {
-			        <button type="submit" name="page" value="1" class="btn btn-outline-primary">Первая</button>
-			        <button type="submit" name="page" value="@(Model.PageNumber - 1)" class="btn btn-outline-primary">Предыдущая</button>
-		        }
-                
-                <!--Кнопки переключения страниц-->
-		        @for (int i = Math.Max(1, Model.PageNumber - 3); i <= Math.Min(Model.PageNumber + 3, Model.TotalPages); i++)
-		        {
-			        <button type="submit" name="page" value="@i" class="btn @(i == Model.PageNumber ? "btn-primary" : "btn-outline-primary")">@i</button>
-		        }
-                
-		        @if (Model.PageNumber < Model.TotalPages)
-		        {
-			        <button type="submit" name="page" value="@(Model.PageNumber + 1)" class="btn btn-outline-primary">Следуюшая</button>
-			        <button type="submit" name="page" value="@Model.TotalPages" class="btn btn-outline-primary">Последняя</button>
-		        }
-	        </div>
-            
-	        <div class="input-group" style="width: 200px;">
-		        <span class="input-group-text">Пользователей:</span>
-		        <select name="pageSize" class="form-select" onchange="this.form.submit()">
-			        @foreach (var size in new[] { 5, 10, 25, 50, 100 })
-			        {
-				        <option value="@size" @(Model.PageSize == size ? "selected=\"selected\"" : "")>@size</option>
-			        }
-		        </select>
-		        <!-- Скрытое поле для сохранения текущей страницы -->
-		        <input type="hidden" name="page" value="1" /> <!-- Всегда сбрасываем на первую страницу при изменении размера -->
-	        </div>
-        </div>
-
-        <!-- Таблица данных -->
-        <table class="table table-striped table-bordered">
-            @{
-                var fieldNames = Extensions.GetDisplayNames(typeof(User));
-                <thead>
-                    <tr>
-                        @{
-                            foreach (var fieldName in fieldNames)
-                            {
-                                <th>@fieldName</th>
-                            }
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model.Items)
-                    {
-                        <tr>
-                            @foreach (var fieldName in fieldNames)
-                            {
-                                <td>@user.GetFieldValueByDisplayName(fieldName)</td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            }
-        </table>
-    </div>
+@{
+	var currentPage = Model.PageNumber;
+	var currentPageSize = Model.PageSize;
+	var baseUrl = Url.Action("Index");
 }
+
+<div class="container mt-5">
+	<h2>Пользователей (@Model.TotalCount всего)</h2>
+
+	<!--Переход по страницам-->
+	<div class="d-flex justify-content-between align-items-center mb-3">
+		<div class="btn-group">
+			@if (Model.NotFirst)
+			{
+				<a href="@baseUrl?page=1&pageSize=@currentPageSize" class="btn btn-outline-primary">Первая</a>
+				<a href="@baseUrl?page=@(currentPage - 1)&pageSize=@currentPageSize" class="btn btn-outline-primary">Предыдущая</a>
+			}
+
+			@for (int i = Model.StartNumber; i <= Model.EndNumber; i++)
+			{
+				<a href="@baseUrl?page=@i&pageSize=@currentPageSize"
+				   class="btn @(i == currentPage ? "btn-primary" : "btn-outline-primary")">
+					@i
+				</a>
+			}
+
+			@if (Model.NotLast)
+			{
+				<a href="@baseUrl?page=@(currentPage + 1)&pageSize=@currentPageSize" class="btn btn-outline-primary">Следующая</a>
+				<a href="@baseUrl?page=@Model.TotalPages&pageSize=@currentPageSize" class="btn btn-outline-primary">Последняя</a>
+			}
+		</div>
+
+		<div class="input-group" style="width: 200px;">
+			<span class="input-group-text">Пользователей:</span>
+			<select class="form-select"
+			        onchange="location.href='@baseUrl?page=@currentPage&pageSize=' + this.value;">
+				@foreach (var size in Model.AvailablePageSizes)
+				{
+					<option value="@size" selected="@(size == currentPageSize)">@size</option>
+				}
+			</select>
+		</div>
+	</div>
+
+	<!-- Таблица данных -->
+	<table class="table table-striped table-bordered">
+		@{
+			var displayNames = Model.DisplayNames;
+			<thead>
+			<tr>
+				@{
+					foreach (var fieldName in displayNames)
+					{
+						<th>@fieldName</th>
+					}
+				}
+			</tr>
+			</thead>
+			<tbody>
+			@foreach (var user in Model.Items)
+			{
+				<tr>
+					@foreach (var displayName in displayNames)
+					{
+						<td>@Model.GetValueFromDisplayName(user, displayName)</td>
+					}
+				</tr>
+			}
+			</tbody>}
+	</table>
+</div>
