@@ -130,6 +130,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506011925419_Initial.cs" />
+    <Compile Include="Migrations\202506011925419_Initial.Designer.cs">
+      <DependentUpon>202506011925419_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Models\Helpers\Extensions.cs" />
     <Compile Include="Models\Interfaces\IRepository.cs" />
@@ -141,6 +146,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App_Data\SQLQuery_SPA_1.sql" />
+    <Content Include="App_Data\Part2\ShopDemo_Create.sql" />
+    <Content Include="App_Data\Part2\ShopDemo_Query.sql" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -151,6 +158,9 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <EmbeddedResource Include="Migrations\202506011925419_Initial.resx">
+      <DependentUpon>202506011925419_Initial.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
