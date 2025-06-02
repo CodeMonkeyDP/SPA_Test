@@ -12,9 +12,19 @@ namespace SPA_Test1.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly AppDbContext _context = new AppDbContext();
-        private UsersRepository _users;
-        
+        #region Constants
+
+        private const int DEFAULT_PAGE = 1;
+        private const int DEFAULT_PAGE_SIZE = 10;
+
+        #endregion
+
+        private readonly UsersRepository _users;
+
+        public HomeController(UsersRepository usersRepository)
+        {
+            _users = usersRepository;
+        }
 
         /// <summary>
         /// Отображение домашней страницы
@@ -25,18 +35,15 @@ namespace SPA_Test1.Controllers
         public ActionResult Index(int? page, int? pageSize)
         {
             // Устанавливаем значения по умолчанию если null
-            int currentPage = page ?? 1;
-            int currentPageSize = pageSize ?? 10;
+            int currentPage = page ?? DEFAULT_PAGE;
+            int currentPageSize = pageSize ?? DEFAULT_PAGE_SIZE;
 
             // Проверяем допустимые значения
-            int[] allowedPageSizes = { 5, 10, 25, 50, 100 };
+            int[] allowedPageSizes = UsersViewModel.ALLOWED_PAGE_SIZES;
             if (!allowedPageSizes.Contains(currentPageSize))
             {
-                currentPageSize = 10;
+                currentPageSize = DEFAULT_PAGE_SIZE;
             }
-            
-            if (_users == null)
-                _users = new UsersRepository(_context);
 
             // Получаем пользователей для данной страницы
             var query = _users.Query(currentPage, currentPageSize);
@@ -50,16 +57,6 @@ namespace SPA_Test1.Controllers
             };
 
             return View(viewModel);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // Очищаем память от DB Context
-                _context.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

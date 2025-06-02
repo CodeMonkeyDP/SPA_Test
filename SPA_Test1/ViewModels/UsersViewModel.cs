@@ -11,6 +11,11 @@ namespace SPA_Test1.ViewModels
     public class UsersViewModel : IPageListViewModel<User>
     {
         /// <summary>
+        /// Допустимые размеры страницы
+        /// </summary>
+        public static readonly int[] ALLOWED_PAGE_SIZES = new[] { 5, 10, 25, 50, 100 };
+
+        /// <summary>
         /// Элементы списка с текущей страницы
         /// </summary>
         public List<User> Items { get; set; }
@@ -63,7 +68,7 @@ namespace SPA_Test1.ViewModels
         /// <summary>
         /// Доступные размеры страницы
         /// </summary>
-        public int[] AvailablePageSizes => new[] { 5, 10, 25, 50, 100 };
+        public int[] AvailablePageSizes => ALLOWED_PAGE_SIZES;
 
         /// <summary>
         /// Получение значения по отображаемому имени свойства

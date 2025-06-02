@@ -10,7 +10,7 @@ namespace SPA_Test1.Models.Repository
     /// </summary>
     public class UsersRepository : IRepository<User>
     {
-        private AppDbContext _dbContext;
+        private readonly AppDbContext _dbContext;
 
         public UsersRepository(AppDbContext context)
         {
@@ -65,6 +65,11 @@ namespace SPA_Test1.Models.Repository
             {
                 return _dbContext.Users.Count();
             }
+        }
+
+        public void Dispose()
+        {
+            _dbContext?.Dispose();
         }
     }
 }
