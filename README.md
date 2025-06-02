@@ -1,0 +1,2 @@
+Реализация тестового задания по созданию одностраничного сайта. Создание базы данных для этой задачи реализовано двумя способами. Первый способ - через Sql-запрос (https://github.com/CodeMonkeyDP/SPA_Test/blob/master/SPA_Test1/App_Data/SQLQuery_SPA_1.sql), второй способ - через миграции.
+Файлы второй части задания находятся в папке https://github.com/CodeMonkeyDP/SPA_Test/tree/master/SPA_Test1/App_Data/Part2
